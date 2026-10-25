@@ -1,11 +1,20 @@
-# Multi-stage build for ultra-lightweight C++ container
-FROM gcc:13 AS builder
+# Multi-stage build using debian:bookworm-slim for BOTH builder and runtime
+FROM debian:bookworm-slim AS builder
+
+# Install GCC C++ compiler on debian:bookworm
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    g++ \
+    make \
+    ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY httplib.h server.cpp ./
-RUN g++ -std=c++17 -O2 server.cpp -o server -lpthread
 
-# Minimal runtime image
+# Compile with static libstdc++ to guarantee zero GLIBCXX mismatches
+RUN g++ -std=c++17 -O2 -static-libgcc -static-libstdc++ server.cpp -o server -lpthread
+
+# Final minimal runtime image with exact same debian:bookworm-slim base
 FROM debian:bookworm-slim
 WORKDIR /app
 
