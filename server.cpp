@@ -682,11 +682,24 @@ int main(int argc, char* argv[]) {
 #endif
 
     int port = 8080;
-    if (const char* envPort = std::getenv("PORT")) {
-        try { port = std::stoi(envPort); } catch (...) {}
-    }
-    if (argc > 1) {
-        try { port = std::stoi(argv[1]); } catch (...) {}
+    const char* envPort = std::getenv("PORT");
+    if (envPort && *envPort) {
+        try {
+            port = std::stoi(envPort);
+            cout << "[INFO] Loaded PORT from environment: " << port << endl;
+        } catch (...) {
+            port = 8080;
+            cout << "[WARN] Failed to parse PORT env var, falling back to 8080" << endl;
+        }
+    } else if (argc > 1) {
+        try {
+            port = std::stoi(argv[1]);
+            cout << "[INFO] Loaded PORT from CLI argument: " << port << endl;
+        } catch (...) {
+            port = 8080;
+        }
+    } else {
+        cout << "[INFO] Defaulting to PORT: 8080" << endl;
     }
 
     seedInitialData();
@@ -1020,12 +1033,11 @@ int main(int argc, char* argv[]) {
     cout << "========================================================" << endl;
     cout << "  [OK] C++ DSA Engines loaded: DLL, BST, Hash Table, Merge Sort, Max-Heap" << endl;
     cout << "  [OK] Seed records loaded: " << masterList.size << endl;
-    cout << "  [OK] Server listening at: http://localhost:" << port << endl;
-    cout << "  [OK] Open your browser and navigate to: http://localhost:" << port << endl;
+    cout << "  [OK] Server binding to: 0.0.0.0:" << port << endl;
     cout << "========================================================\n" << endl;
 
     if (!svr.listen("0.0.0.0", port)) {
-        cout << "[ERR] Failed to bind to port " << port << ". Try running with another port argument." << endl;
+        std::cerr << "[ERR] Failed to bind to 0.0.0.0 on port " << port << std::endl;
         return 1;
     }
 

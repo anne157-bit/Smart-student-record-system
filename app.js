@@ -277,7 +277,7 @@ const emailHash  = new HashTable();
 const helpdesk   = new MaxHeap();
 
 // C++ REST Backend configuration
-const API_BASE = window.location.origin && window.location.origin.includes('localhost:8080')
+const API_BASE = (window.location.protocol === 'http:' || window.location.protocol === 'https:')
   ? ''
   : 'http://localhost:8080';
 
