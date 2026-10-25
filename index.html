@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Student Record System | DSA Mini Project</title>
+  <meta name="description" content="Full-featured Smart Student Record System — DLL, BST, Hash Table, Merge Sort, Max-Heap implemented in JavaScript." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <div class="logo-text">
+          <span class="logo-title">SSRS</span>
+          <span class="logo-sub">DSA Mini Project</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-val" id="stat-records">8</span>
+        <span class="stat-label">Students</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-val" id="stat-queue">0</span>
+        <span class="stat-label">Queue</span>
+      </div>
+    </div>
+
+    <nav class="nav-menu">
+      <div class="nav-group">
+        <div class="nav-group-label">Student Management</div>
+        <button class="nav-btn active" id="nav-add" onclick="showPage('add')">
+          <span class="nav-icon">➕</span> Add Student
+        </button>
+        <button class="nav-btn" id="nav-view" onclick="showPage('view')">
+          <span class="nav-icon">📋</span> View All Students
+        </button>
+        <button class="nav-btn" id="nav-search-roll" onclick="showPage('search-roll')">
+          <span class="nav-icon">🔍</span> Search by Roll (BST)
+        </button>
+        <button class="nav-btn" id="nav-search-email" onclick="showPage('search-email')">
+          <span class="nav-icon">📧</span> Search by Email (Hash)
+        </button>
+        <button class="nav-btn" id="nav-update" onclick="showPage('update')">
+          <span class="nav-icon">✏️</span> Update CGPA
+        </button>
+        <button class="nav-btn" id="nav-delete" onclick="showPage('delete')">
+          <span class="nav-icon">🗑️</span> Delete Student
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-label">Reports &amp; Analytics</div>
+        <button class="nav-btn" id="nav-leaderboard" onclick="showPage('leaderboard')">
+          <span class="nav-icon">🏆</span> Leaderboard (Merge Sort)
+        </button>
+        <button class="nav-btn" id="nav-bst" onclick="showPage('bst')">
+          <span class="nav-icon">🌳</span> Sorted by Roll (BST)
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-label">Helpdesk</div>
+        <button class="nav-btn" id="nav-helpdesk" onclick="showPage('helpdesk')">
+          <span class="nav-icon">🎫</span> Helpdesk (Max-Heap)
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-label">Learning</div>
+        <button class="nav-btn" id="nav-visualizer" onclick="showPage('visualizer')">
+          <span class="nav-icon">🧠</span> DSA Visualizer
+        </button>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="dsa-badge">DLL · BST · Hash · MSort · Heap</div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════ MAIN ══════════════════════════ -->
+  <main class="main-content">
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">☰</button>
+        <div class="page-title" id="page-title">Add New Student</div>
+      </div>
+      <div class="topbar-right">
+        <div class="backend-status-pill checking" id="backend-status" onclick="checkBackendHealth(true)" title="C++ REST API Engine (Click to re-check)">
+          <span class="status-dot"></span>
+          <span id="backend-status-text">C++ Backend</span>
+        </div>
+        <div class="dsa-chips">
+          <span class="chip chip-cyan">DLL</span>
+          <span class="chip chip-green">BST</span>
+          <span class="chip chip-yellow">Hash</span>
+          <span class="chip chip-purple">MSort</span>
+          <span class="chip chip-red">Heap</span>
+        </div>
+        <span class="theme-label" id="theme-label">Light</span>
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Toggle dark/light mode">
+          <div class="theme-toggle-thumb" id="theme-thumb">☀️</div>
+        </button>
+      </div>
+    </header>
+
+    <div class="page-container">
+
+      <!-- ===== ADD STUDENT ===== -->
+      <section class="page active" id="page-add">
+        <div class="section-header">
+          <h1 class="section-title">Add New Student</h1>
+          <p class="section-sub">Inserts into DLL tail O(1) · BST O(log n) · Hash Table O(1) simultaneously</p>
+        </div>
+        <div class="form-card">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="add-roll">Roll Number</label>
+              <input type="number" id="add-roll" placeholder="e.g. 109" min="1" />
+            </div>
+            <div class="form-group">
+              <label for="add-name">Full Name</label>
+              <input type="text" id="add-name" placeholder="e.g. Ravi Kumar" />
+            </div>
+            <div class="form-group">
+              <label for="add-email">Email Address</label>
+              <input type="email" id="add-email" placeholder="e.g. ravi@college.edu" />
+            </div>
+            <div class="form-group">
+              <label for="add-branch">Branch / Dept</label>
+              <input type="text" id="add-branch" placeholder="e.g. CSE" />
+            </div>
+            <div class="form-group">
+              <label for="add-year">Year (1–4)</label>
+              <input type="number" id="add-year" placeholder="e.g. 2" min="1" max="4" />
+            </div>
+            <div class="form-group">
+              <label for="add-cgpa">CGPA (0.0–10.0)</label>
+              <input type="number" id="add-cgpa" placeholder="e.g. 8.75" step="0.01" min="0" max="10" />
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="addStudent()">➕ Add Student</button>
+        </div>
+        <div id="add-feedback" class="feedback-area"></div>
+      </section>
+
+      <!-- ===== VIEW ALL ===== -->
+      <section class="page" id="page-view">
+        <div class="section-header">
+          <h1 class="section-title">All Students</h1>
+          <p class="section-sub">Doubly Linked List — forward (head→tail) and backward (tail→head) traversal</p>
+        </div>
+        <div class="toolbar">
+          <button class="btn btn-outline active" id="btn-fwd" onclick="viewForward()">Forward (Head → Tail)</button>
+          <button class="btn btn-outline" id="btn-bwd" onclick="viewBackward()">Reverse (Tail → Head)</button>
+          <span class="record-count" id="view-count"></span>
+        </div>
+        <div id="view-table-wrap"></div>
+      </section>
+
+      <!-- ===== SEARCH BY ROLL ===== -->
+      <section class="page" id="page-search-roll">
+        <div class="section-header">
+          <h1 class="section-title">Search by Roll Number</h1>
+          <p class="section-sub">Binary Search Tree lookup — O(log n) average · O(n) worst</p>
+        </div>
+        <div class="form-card inline-form">
+          <div class="form-group">
+            <label for="sr-roll">Roll Number</label>
+            <input type="number" id="sr-roll" placeholder="Enter roll number" min="1" />
+          </div>
+          <button class="btn btn-primary" onclick="searchByRoll()">🔍 Search</button>
+        </div>
+        <div id="sr-feedback" class="feedback-area"></div>
+        <div id="sr-result"></div>
+      </section>
+
+      <!-- ===== SEARCH BY EMAIL ===== -->
+      <section class="page" id="page-search-email">
+        <div class="section-header">
+          <h1 class="section-title">Search by Email</h1>
+          <p class="section-sub">Hash Table lookup — O(1) average · djb2 hash · separate chaining</p>
+        </div>
+        <div class="form-card inline-form">
+          <div class="form-group">
+            <label for="se-email">Email Address</label>
+            <input type="email" id="se-email" placeholder="e.g. aryan.mehta@college.edu" />
+          </div>
+          <button class="btn btn-primary" onclick="searchByEmail()">🔍 Search</button>
+        </div>
+        <div id="se-feedback" class="feedback-area"></div>
+        <div id="se-result"></div>
+      </section>
+
+      <!-- ===== UPDATE CGPA ===== -->
+      <section class="page" id="page-update">
+        <div class="section-header">
+          <h1 class="section-title">Update Student CGPA</h1>
+          <p class="section-sub">Synced update across DLL + BST + Hash Table</p>
+        </div>
+        <div class="form-card">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="up-roll">Roll Number</label>
+              <input type="number" id="up-roll" placeholder="Enter roll number" min="1" />
+            </div>
+            <div class="form-group">
+              <label for="up-cgpa">New CGPA (0.0–10.0)</label>
+              <input type="number" id="up-cgpa" placeholder="e.g. 9.20" step="0.01" min="0" max="10" />
+            </div>
+          </div>
+          <button class="btn btn-warning" onclick="updateCGPA()">✏️ Update CGPA</button>
+        </div>
+        <div id="up-feedback" class="feedback-area"></div>
+      </section>
+
+      <!-- ===== DELETE STUDENT ===== -->
+      <section class="page" id="page-delete">
+        <div class="section-header">
+          <h1 class="section-title">Delete Student Record</h1>
+          <p class="section-sub">Removes from DLL O(n) · BST O(log n) · Hash Table O(1)</p>
+        </div>
+        <div class="form-card inline-form">
+          <div class="form-group">
+            <label for="del-roll">Roll Number</label>
+            <input type="number" id="del-roll" placeholder="Roll number to delete" min="1" />
+          </div>
+          <button class="btn btn-danger" onclick="deleteStudent()">🗑️ Delete</button>
+        </div>
+        <div id="del-feedback" class="feedback-area"></div>
+        <div id="del-confirm" class="hidden"></div>
+      </section>
+
+      <!-- ===== LEADERBOARD ===== -->
+      <section class="page" id="page-leaderboard">
+        <div class="section-header">
+          <h1 class="section-title">Top Performers Leaderboard</h1>
+          <p class="section-sub">Sorted by CGPA descending via Merge Sort — O(n log n) always</p>
+        </div>
+        <button class="btn btn-primary" onclick="showLeaderboard()" style="margin-bottom:1.5rem">🏆 Generate Leaderboard</button>
+        <div id="leaderboard-table"></div>
+      </section>
+
+      <!-- ===== BST IN-ORDER ===== -->
+      <section class="page" id="page-bst">
+        <div class="section-header">
+          <h1 class="section-title">Students by Roll Number</h1>
+          <p class="section-sub">BST In-Order Traversal (Left → Root → Right) — O(n)</p>
+        </div>
+        <button class="btn btn-primary" onclick="showBSTInOrder()" style="margin-bottom:1.5rem">🌳 In-Order Traversal</button>
+        <div id="bst-table"></div>
+      </section>
+
+      <!-- ===== HELPDESK ===== -->
+      <section class="page" id="page-helpdesk">
+        <div class="section-header">
+          <h1 class="section-title">Student Helpdesk</h1>
+          <p class="section-sub">Max-Heap Priority Queue — Insert O(log n) · Extract O(log n) · Peek O(1)</p>
+        </div>
+        <div class="helpdesk-layout">
+          <div class="form-card hd-card">
+            <h3 class="card-sub-title">🎫 Submit New Request</h3>
+            <div class="form-group">
+              <label for="hd-roll">Roll Number</label>
+              <input type="number" id="hd-roll" placeholder="Your roll number" min="1" />
+            </div>
+            <div class="form-group">
+              <label for="hd-priority">Priority (1 = low · 10 = critical)</label>
+              <div class="priority-slider-wrap">
+                <input type="range" id="hd-priority" min="1" max="10" value="5" oninput="updatePriorityLabel(this.value)" />
+                <span class="priority-label" id="hd-priority-label">5</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="hd-issue">Issue Description</label>
+              <textarea id="hd-issue" placeholder="Describe your issue..." rows="3"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="submitHelpdeskRequest()">📤 Submit Request</button>
+            <div id="hd-submit-feedback" class="feedback-area"></div>
+          </div>
+
+          <div class="hd-actions">
+            <div class="hd-action-card" onclick="processNext()">
+              <div class="hd-action-icon" style="background:linear-gradient(135deg,#22c55e,#16a34a)">▶</div>
+              <div>
+                <div class="hd-action-title">Process Next</div>
+                <div class="hd-action-sub">extractMax() — O(log n)</div>
+              </div>
+            </div>
+            <div class="hd-action-card" onclick="peekQueue()">
+              <div class="hd-action-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">👁</div>
+              <div>
+                <div class="hd-action-title">Peek (Highest Priority)</div>
+                <div class="hd-action-sub">peek() — O(1)</div>
+              </div>
+            </div>
+            <div class="hd-action-card" onclick="showHelpdeskQueue()">
+              <div class="hd-action-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">≡</div>
+              <div>
+                <div class="hd-action-title">View All Requests</div>
+                <div class="hd-action-sub">display() — O(n)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="hd-feedback" class="feedback-area" style="margin-top:1rem"></div>
+        <div id="hd-queue-display" style="margin-top:1rem"></div>
+      </section>
+
+      <!-- ===== DSA VISUALIZER ===== -->
+      <section class="page" id="page-visualizer">
+        <div class="section-header">
+          <h1 class="section-title">DSA Visualizer</h1>
+          <p class="section-sub">See how each data structure in this system actually works — live, with your data</p>
+        </div>
+
+        <!-- Tab bar -->
+        <div class="viz-tabs">
+          <button class="viz-tab active" id="viz-tab-dll"  onclick="showVizTab('dll')">1. Doubly Linked List</button>
+          <button class="viz-tab"        id="viz-tab-bst"  onclick="showVizTab('bst')">2. Binary Search Tree</button>
+          <button class="viz-tab"        id="viz-tab-hash" onclick="showVizTab('hash')">3. Hash Table</button>
+          <button class="viz-tab"        id="viz-tab-sort" onclick="showVizTab('sort')">4. Merge Sort</button>
+          <button class="viz-tab"        id="viz-tab-heap" onclick="showVizTab('heap')">5. Max-Heap</button>
+        </div>
+
+        <!-- 1. DLL Panel -->
+        <div class="viz-panel active" id="viz-dll">
+          <div class="viz-card">
+            <div class="viz-title">Doubly Linked List — Master Record Store</div>
+            <div class="viz-desc">
+              Each node stores a student record with pointers to prev and next nodes.
+              Insert: O(1) at tail · Delete: O(n) · Traverse: O(n)
+            </div>
+            <div class="dll-nodes" id="dll-viz-nodes">Loading…</div>
+            <div style="font-size:.72rem;color:var(--text-muted);margin-top:.5rem;font-family:'JetBrains Mono',monospace">
+              ← DLL traversal: each node linked bidirectionally →
+            </div>
+          </div>
+
+          <div class="viz-card">
+            <div class="viz-title">Linear Search Simulation (DLL)</div>
+            <div class="viz-desc">Watch the pointer walk through each node until the target is found.</div>
+            <div class="viz-controls">
+              <button class="btn btn-primary" onclick="demoSearchDLL()">▶ Simulate Linear Search</button>
+              <button class="btn btn-outline" onclick="renderDLLViz()">↺ Reset</button>
+            </div>
+            <div class="step-log" id="dll-search-log" style="min-height:80px"></div>
+          </div>
+        </div>
+
+        <!-- 2. BST Panel -->
+        <div class="viz-panel" id="viz-bst">
+          <div class="viz-card">
+            <div class="viz-title">Binary Search Tree — Roll Number Index</div>
+            <div class="viz-desc">
+              Left child has smaller rollNo, right child has larger. Insert/Search: O(log n) avg.
+              In-Order traversal yields sorted output.
+            </div>
+            <div class="bst-canvas">
+              <svg id="bst-svg" class="bst-svg" width="100%" height="320"></svg>
+            </div>
+          </div>
+          <div class="viz-card">
+            <div class="viz-title">BST Search Animation</div>
+            <div class="viz-desc">Watch the tree eliminate half the remaining nodes at each step.</div>
+            <div class="viz-controls">
+              <button class="btn btn-primary" onclick="demoBSTSearch()">▶ Simulate BST Search</button>
+              <button class="btn btn-outline" onclick="renderBSTViz()">↺ Reset</button>
+            </div>
+            <div class="step-log" id="bst-search-log" style="min-height:80px"></div>
+          </div>
+        </div>
+
+        <!-- 3. Hash Panel -->
+        <div class="viz-panel" id="viz-hash">
+          <div class="viz-card">
+            <div class="viz-title">Hash Table — Email Index (djb2 + Separate Chaining)</div>
+            <div class="viz-desc">
+              djb2 hash maps each email to a bucket index (0–100). Collisions handled via chaining.
+              Search/Insert/Delete: O(1) average.
+            </div>
+            <div id="hash-stats" style="font-size:.75rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-bottom:.75rem"></div>
+            <div class="hash-grid" id="hash-viz-grid">Loading…</div>
+          </div>
+          <div class="viz-card">
+            <div class="viz-title">Hash Lookup Demo</div>
+            <div class="viz-desc">See how djb2 computes the bucket index for a given email in O(k) — then lookup is O(1).</div>
+            <div class="viz-controls">
+              <button class="btn btn-primary" onclick="demoHashLookup()">▶ Demo Hash Lookup</button>
+              <button class="btn btn-outline" onclick="renderHashViz()">↺ Reset</button>
+            </div>
+            <div class="step-log" id="hash-search-log" style="min-height:80px"></div>
+          </div>
+        </div>
+
+        <!-- 4. Sort Panel -->
+        <div class="viz-panel" id="viz-sort">
+          <div class="viz-card">
+            <div class="viz-title">Merge Sort — CGPA Leaderboard</div>
+            <div class="viz-desc">
+              Divide-and-conquer: split array into halves recursively, then merge sorted halves.
+              Time: O(n log n) always · Space: O(n) auxiliary.
+              Bars represent student CGPAs — taller = higher CGPA.
+            </div>
+            <div class="sort-bars" id="sort-bars"></div>
+            <div style="height:1.8rem"></div>
+            <div class="viz-controls" style="margin-top:.5rem">
+              <button class="btn btn-primary" onclick="initSortViz()">↺ Reset / Load Data</button>
+              <button class="btn btn-warning" onclick="sortNextStep()">Next Step ▶</button>
+              <button class="btn btn-outline" onclick="sortRunAll()">Run All ⚡</button>
+              <span id="sort-step-info" style="font-size:.75rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace"></span>
+            </div>
+            <div class="step-log" id="sort-log" style="max-height:180px"></div>
+          </div>
+        </div>
+
+        <!-- 5. Heap Panel -->
+        <div class="viz-panel" id="viz-heap">
+          <div class="viz-card">
+            <div class="viz-title">Max-Heap — Helpdesk Priority Queue</div>
+            <div class="viz-desc">
+              Array-based max-heap: parent priority >= children. heap[0] always holds highest priority.
+              Left child of heap[i] = heap[2i+1] · Right = heap[2i+2].
+              Insert: siftUp O(log n) · Extract: siftDown O(log n).
+            </div>
+            <div class="heap-grid" id="heap-viz">
+              <div class="empty-state"><span class="empty-icon">📭</span>Submit requests via the Helpdesk page first.</div>
+            </div>
+          </div>
+          <div class="viz-card">
+            <div class="viz-title">Heap Parent–Child Relationships</div>
+            <div class="viz-desc">Logical tree structure encoded in the array:</div>
+            <div class="step-log" id="heap-tree-desc" style="min-height:80px"></div>
+            <div class="viz-controls" style="margin-top:1rem">
+              <button class="btn btn-primary" onclick="renderHeapViz()">↺ Refresh Heap View</button>
+            </div>
+          </div>
+        </div>
+
+      </section><!-- end visualizer -->
+    </div><!-- end page-container -->
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+  <script src="app.js"></script>
+  <script>
+    // On load, render visualizer panels that are static
+    window.addEventListener('load', () => {
+      renderDLLViz();
+      renderBSTViz();
+      renderHashViz();
+      initSortViz();
+    });
+  </script>
+</body>
+</html>

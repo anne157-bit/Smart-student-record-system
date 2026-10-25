@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: smart-student-record-system
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
