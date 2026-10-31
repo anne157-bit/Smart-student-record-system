@@ -1,5 +1,5 @@
 # ⚡ Smart Student Record System (SSRS)
-> **DSA Mini Project** — High-Performance C++ REST API Backend + Dynamic Dual-Theme Web Interface + Real-Time DSA Visualizer.
+> **DSA Mini Project** 
 
 [![Language: C++17](https://img.shields.io/badge/Language-C%2B%2B17-blue.svg)](https://en.cppreference.com/w/cpp/17)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](./Dockerfile)
@@ -9,7 +9,7 @@
 ---
 
 ## 📌 1. Description
-The **Smart Student Record System (SSRS)** is a full-stack academic management and data structures learning system. It bridges a **high-performance C++ backend** running fundamental Data Structures & Algorithms (built entirely from scratch without STL containers like `std::map`, `std::list`, or `std::priority_queue`) with an interactive, modern **web interface**. The system provides real-time student record management, instant multi-key lookups, academic analytics (leaderboard generation), priority-based student helpdesk ticketing, and an interactive **DSA Visualizer** demonstrating each algorithm in real time.
+The **Smart Student Record System (SSRS)** is a academic management and data structures learning system. It bridges a **C++ backend** running fundamental Data Structures & Algorithms (built entirely from scratch without STL containers like `std::map`, `std::list`, or `std::priority_queue`) with an interactive, modern **web interface**. The system provides real-time student record management, instant multi-key lookups, academic analytics (leaderboard generation), priority-based student helpdesk ticketing, and an interactive **DSA Visualizer** demonstrating each algorithm in real time.
 
 ---
 
